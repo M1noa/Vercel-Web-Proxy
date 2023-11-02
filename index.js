@@ -1,5 +1,17 @@
 const Fastify = require('fastify');
 const server = Fastify();
+const express = require('express');
+const axios = require('axios');
+
+const app = express();
+
+// Middleware to log visitor information
+app.use((req, res, next) => {
+  const ip = req.ip;
+  const userAgent = req.headers['user-agent'];
+  console.log(`New Visitor : IP: ${ip}`);
+  next();
+});
 
 server.register(require('@fastify/http-proxy'), {
   upstream: 'https://1v1.lol/',
@@ -19,7 +31,7 @@ server.register(require('@fastify/http-proxy'), {
   http2: false,
 });
 
-// Serve the facts.html file
+// Serve the main page
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
