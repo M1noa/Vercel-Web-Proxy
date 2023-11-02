@@ -2,8 +2,8 @@ const Fastify = require('fastify');
 const server = Fastify();
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://nativegames.net',
-  prefix: '/native', 
+  upstream: 'https://nativegames.net/play/aquapark-slides/',
+  prefix: '/aqua', 
   http2: false,
 });
 
