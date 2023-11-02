@@ -2,8 +2,14 @@ const Fastify = require('fastify');
 const server = Fastify();
 
 server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://nativegames.net',
+  prefix: '/native', 
+  http2: false,
+});
+
+server.register(require('@fastify/http-proxy'), {
   upstream: 'https://artclass.site/',
-  prefix: '/', 
+  prefix: '/art', 
   http2: false,
 });
 
