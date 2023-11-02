@@ -25,5 +25,11 @@ server.register(require('@fastify/http-proxy'), {
   http2: false,
 });
 
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://google.com/',
+  prefix: '/google', 
+  http2: false,
+});
+
 server.listen({host: "0.0.0.0", port: 3000 });
 
