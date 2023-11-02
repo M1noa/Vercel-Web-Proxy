@@ -2,7 +2,7 @@ const Fastify = require('fastify');
 const server = Fastify();
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://totallyscience.co/',
+  upstream: 'https://artclass.site/',
   prefix: '/', 
   http2: false,
 });
