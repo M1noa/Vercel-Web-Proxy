@@ -2,7 +2,7 @@ const Fastify = require('fastify');
 const server = Fastify();
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://shuttleproxy.com/',
+  upstream: 'https://1v1.lol/',
   prefix: '/', 
   http2: false,
 });
