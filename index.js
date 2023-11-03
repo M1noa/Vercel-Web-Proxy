@@ -22,7 +22,7 @@ server.register(require('@fastify/http-proxy'), {
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://ome.tv/#app',
+  upstream: 'https://ome.tv#app',
   prefix: '/ome/', 
   http2: false,
 });
