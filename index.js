@@ -8,7 +8,7 @@ server.register(require('@fastify/http-proxy'), {
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://yolk.today',
+  upstream: 'https://shellshock.io/',
   prefix: '/shellshock/', 
   http2: false,
 });
