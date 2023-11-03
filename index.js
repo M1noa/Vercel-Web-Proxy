@@ -49,5 +49,16 @@ server.register(require('@fastify/http-proxy'), {
   http2: false,
 });
 
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://music.apple.com/',
+  prefix: '/music/', 
+  http2: false,
+});
+
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://spotify.com/',
+  prefix: '/spotify/', 
+  http2: false,
+});
 
 server.listen({host: "0.0.0.0", port: 3000 });
