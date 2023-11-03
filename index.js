@@ -50,7 +50,7 @@ server.register(require('@fastify/http-proxy'), {
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://music.apple.com/',
+  upstream: 'https://music.apple.com/us/browse',
   prefix: '/music/', 
   http2: false,
 });
@@ -58,6 +58,18 @@ server.register(require('@fastify/http-proxy'), {
 server.register(require('@fastify/http-proxy'), {
   upstream: 'https://spotify.com/',
   prefix: '/spotify/', 
+  http2: false,
+});
+
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://youtube.com/',
+  prefix: '/youtube/', 
+  http2: false,
+});
+
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://tiktok.com/',
+  prefix: '/tiktok/', 
   http2: false,
 });
 
