@@ -32,7 +32,7 @@ server.register(require('@fastify/http-proxy'), {
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://omegle.onl/',
+  upstream: 'https://omegle.onl/home/',
   prefix: '/omegle/', 
   http2: false,
 });
