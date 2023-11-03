@@ -3,19 +3,19 @@ const server = Fastify();
 
 server.register(require('@fastify/http-proxy'), {
   upstream: 'https://1v1.lol/',
-  prefix: '/1v1', 
+  prefix: '/1v1/', 
   http2: false,
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://shellshock.io/',
-  prefix: '/shellshock', 
+  upstream: 'https://yolk.today',
+  prefix: '/shellshock/', 
   http2: false,
 });
 
 server.register(require('@fastify/http-proxy'), {
   upstream: 'https://skribbl.io/',
-  prefix: '/skribbl', 
+  prefix: '/skribbl/', 
   http2: false,
 });
 
