@@ -20,8 +20,20 @@ server.register(require('@fastify/http-proxy'), {
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://shuttleproxy.com',
-  prefix: '/prox', 
+  upstream: 'https://shuttleproxy.com/',
+  prefix: '/prox/', 
+  http2: false,
+});
+
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://discord.com/',
+  prefix: '/discord/', 
+  http2: false,
+});
+
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://omegle.onl/',
+  prefix: '/omegle/', 
   http2: false,
 });
 
