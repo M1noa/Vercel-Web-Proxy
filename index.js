@@ -16,19 +16,13 @@ server.register(require('@fastify/http-proxy'), {
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://omegle.onl/online/',
+  upstream: 'https://www.omegle.com/
   prefix: '/omegle/', 
   http2: false,
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://monkey.app/',
-  prefix: '/monkey/', 
-  http2: false,
-});
-
-server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://ome.tv/',
+  upstream: 'https://ome.tv/#app',
   prefix: '/ome/', 
   http2: false,
 });
