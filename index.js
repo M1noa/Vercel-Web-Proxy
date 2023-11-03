@@ -37,4 +37,17 @@ server.register(require('@fastify/http-proxy'), {
   http2: false,
 });
 
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://now.gg/apps/roblox-corporation/5349/roblox.html/',
+  prefix: '/roblox/', 
+  http2: false,
+});
+
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://nativegames.net/',
+  prefix: '/native/', 
+  http2: false,
+});
+
+
 server.listen({host: "0.0.0.0", port: 3000 });
