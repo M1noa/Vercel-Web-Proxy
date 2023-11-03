@@ -38,7 +38,7 @@ server.register(require('@fastify/http-proxy'), {
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://now.gg/apps/roblox-corporation/5349/roblox.html/',
+  upstream: 'https://now.gg/apps/roblox-corporation/5349/roblox.html',
   prefix: '/roblox/', 
   http2: false,
 });
