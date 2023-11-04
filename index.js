@@ -21,15 +21,9 @@ server.register(require('@fastify/http-proxy'), {
   http2: false,
 });
 
-server.register(require('@fastify/http-proxy'), {
-  upstream: "https://ome.tv/#app",
-  prefix: '/ome/', 
-  http2: false,
-});
-
 // Games
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://now.gg/apps/roblox-corporation/5349/roblox.html',
+  upstream: 'https://now.gg/play/roblox-corporation/5349/roblox',
   prefix: '/roblox/', 
   http2: false,
 });
