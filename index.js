@@ -8,16 +8,10 @@ server.register(require('@fastify/http-proxy'), {
   http2: false,
 });
 
-// Chat Sites
+// Chating
 server.register(require('@fastify/http-proxy'), {
   upstream: 'https://discord.com/app',
   prefix: '/discord/', 
-  http2: false,
-});
-
-server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://www.omegle.com/'
-  prefix: '/omegle/', 
   http2: false,
 });
 
