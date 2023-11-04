@@ -16,7 +16,7 @@ server.register(require('@fastify/http-proxy'), {
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://www.omegle.com/
+  upstream: 'https://www.omegle.com/'
   prefix: '/omegle/', 
   http2: false,
 });
