@@ -3,7 +3,7 @@ const server = Fastify();
 
 // Proxys
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://shuttleproxy.com/',
+  upstream: 'https://artclass.site/',
   prefix: '/prox/', 
   http2: false,
 });
