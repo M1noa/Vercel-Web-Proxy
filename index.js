@@ -1,7 +1,7 @@
 const Fastify = require('fastify');
 const server = Fastify();
 
-// Proxys
+// Main page
 server.register(require('@fastify/http-proxy'), {
   upstream: 'https://artclass.site/',
   prefix: '/', 
@@ -23,26 +23,8 @@ server.register(require('@fastify/http-proxy'), {
 });
 
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://nativegames.net/',
-  prefix: '/native/', 
-  http2: false,
-});
-
-server.register(require('@fastify/http-proxy'), {
   upstream: 'https://1v1.lol/',
   prefix: '/1v1/', 
-  http2: false,
-});
-
-server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://shellshock.io/',
-  prefix: '/shellshock/', 
-  http2: false,
-});
-
-server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://skribbl.io/',
-  prefix: '/skribbl/', 
   http2: false,
 });
 
