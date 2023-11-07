@@ -28,4 +28,11 @@ server.register(require('@fastify/http-proxy'), {
   http2: false,
 });
 
+// Other
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://wtmovies.com/',
+  prefix: '/movie/', 
+  http2: false,
+});
+
 server.listen({host: "0.0.0.0", port: 3000 });
