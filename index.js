@@ -3,7 +3,7 @@ const server = Fastify();
 
 // Main page
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://artclass.site/',
+  upstream: 'https://ubgusa.com/',
   prefix: '/', 
   http2: false,
 });
