@@ -3,7 +3,7 @@ const server = Fastify();
 
 // Main page
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://ubgusa.com/',
+  upstream: 'https://nebulaproxy.io/',
   prefix: '/', 
   http2: false,
 });
