@@ -8,10 +8,10 @@ server.register(require('@fastify/http-proxy'), {
   http2: false,
 });
 
-// Chating
+// Proxys
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://discord.com/app',
-  prefix: '/discord/', 
+  upstream: 'https://mathforkids.xyz',
+  prefix: '/mfk/', 
   http2: false,
 });
 
