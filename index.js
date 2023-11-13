@@ -3,7 +3,7 @@ const server = Fastify();
 
 // Main page
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://shuttleproxy.com/',
+  upstream: 'http://mathforkids.xyz/',
   prefix: '/', 
   http2: false,
 });
