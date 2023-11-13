@@ -15,6 +15,12 @@ server.register(require('@fastify/http-proxy'), {
   http2: false,
 });
 
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://noctura.app/',
+  prefix: '/neb/', 
+  http2: false,
+});
+
 // Games
 server.register(require('@fastify/http-proxy'), {
   upstream: 'https://now.gg/play/roblox-corporation/5349/roblox',
