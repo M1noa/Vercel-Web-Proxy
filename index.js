@@ -3,7 +3,7 @@ const server = Fastify();
 
 // Main page
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://native-v3.vercel.app/',
+  upstream: 'https://shuttleproxy.com/',
   prefix: '/', 
   http2: false,
 });
