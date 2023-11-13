@@ -3,7 +3,7 @@ const server = Fastify();
 
 // Main page
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'http://mathforkids.xyz/',
+  upstream: 'https://noctura.app/',
   prefix: '/', 
   http2: false,
 });
