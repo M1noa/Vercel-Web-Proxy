@@ -3,7 +3,7 @@ const server = Fastify();
 
 // Main page
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://noctura.app/',
+  upstream: 'https://node-form.m1noa.repl.co/',
   prefix: '/', 
   http2: false,
 });
@@ -38,13 +38,6 @@ server.register(require('@fastify/http-proxy'), {
 server.register(require('@fastify/http-proxy'), {
   upstream: 'https://wtmovies.com/',
   prefix: '/movie/', 
-  http2: false,
-});
-
-// Other
-server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://node-form.m1noa.repl.co/',
-  prefix: '/foo/', 
   http2: false,
 });
 
