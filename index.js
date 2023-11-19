@@ -3,7 +3,7 @@ const server = Fastify();
 
 // Main page
 server.register(require('@fastify/http-proxy'), {
-  upstream: 'https://node-form.m1noa.repl.co/',
+  upstream: 'https://nativegames.net/',
   prefix: '/', 
   http2: false,
 });
