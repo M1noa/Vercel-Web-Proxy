@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fastify/static": "^6.0.0",  // Add the correct version here
-    "@fastify/http-proxy": "^7.0.0",  // Include other dependencies
+    "@fastify/static": "^6.0.0",
+    "@fastify/http-proxy": "^7.0.0",
     "@types/node": "^18.0.6",
     "fastify": "^4.24.3",
     "node-fetch": "^3.2.6"
