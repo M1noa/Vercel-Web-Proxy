@@ -2,12 +2,12 @@ const Fastify = require('fastify');
 const server = Fastify();
 
 // Serve the index.html file
-app.get('/', (req, res) => {
+server.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
 // Serve the list.html file
-app.get('/list', (req, res) => {
+server.get('/list', (req, res) => {
   res.sendFile(__dirname + '/list.html');
 });
 
