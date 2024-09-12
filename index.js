@@ -5,7 +5,6 @@ const path = require('node:path')
 server.register(require('@fastify/static'), {
   root: path.join(__dirname, 'public'),
   prefix: '/public/', // optional: default '/'
-  constraints: { host: 'example.com' } // optional: default {}
 })
 
 server.get('/', function (req, reply) {
