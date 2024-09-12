@@ -6,6 +6,11 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+// Serve the list.html file
+app.get('/list', (req, res) => {
+  res.sendFile(__dirname + '/list.html');
+});
+
 // Proxy
 server.register(require('@fastify/http-proxy'), {
   upstream: 'https://shuttleproxy.com/',
