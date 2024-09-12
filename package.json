@@ -13,6 +13,6 @@
     "@fastify/static": "^7.0.4",
     "@fastify/http-proxy": "^9.5.0",
     "@types/node": "^18.0.6",
-    "fastify": "^4.28.5"
+    "fastify": "^4.28.1"
   }
 }
