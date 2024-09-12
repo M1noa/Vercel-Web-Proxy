@@ -10,10 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fastify/static": "^7.0.0",
-    "@fastify/http-proxy": "^7.0.0",
+    "@fastify/static": "^7.0.4",
+    "@fastify/http-proxy": "^9.5.0",
     "@types/node": "^18.0.6",
-    "fastify": "^4.24.3",
-    "node-fetch": "^3.2.6"
+    "fastify": "^4.28.5",
   }
 }
