@@ -2,20 +2,10 @@ const Fastify = require('fastify');
 const path = require('path');
 const server = Fastify();
 
-// Serve static HTML files from a directory
+// Serve static files
 server.register(require('@fastify/static'), {
-  root: path.join(__dirname), // Directory containing your HTML files
-  prefix: '/',                // Base URL path to serve static files
-});
-
-// Route for the index.html file
-server.get('/', (req, reply) => {
-  reply.sendFile('index.html'); // Fastify uses 'sendFile' from the static plugin
-});
-
-// Route for the list.html file
-server.get('/list', (req, reply) => {
-  reply.sendFile('list.html');
+  root: path.join(__dirname, 'public'),  // Set this to the folder containing your HTML files
+  prefix: '/',  // Optional, defaults to '/'
 });
 
 // Proxy
