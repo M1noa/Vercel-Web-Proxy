@@ -90,10 +90,17 @@ server.register(require('@fastify/http-proxy'), {
   http2: false,
 });
 
-// Movies
+// MVP
 server.register(require('@fastify/http-proxy'), {
   upstream: 'https://movieboxpro.app/',
   prefix: '/mvp/', 
+  http2: false,
+});
+
+// Movies
+server.register(require('@fastify/http-proxy'), {
+  upstream: 'https://www.braflix.st/',
+  prefix: '/braflix/', 
   http2: false,
 });
 
