@@ -2,16 +2,16 @@ const Fastify = require('fastify');
 const server = Fastify();
 const path = require('node:path')
 
-fastify.register(require('@fastify/static'), {
+server.register(require('@fastify/static'), {
   root: path.join(__dirname, 'public'),
   prefix: '/public/', // optional: default '/'
   constraints: { host: 'example.com' } // optional: default {}
 })
 
-fastify.get('/', function (req, reply) {
+server.get('/', function (req, reply) {
   reply.sendFile('index.html')
 })
-fastify.get('/list', function (req, reply) {
+server.get('/list', function (req, reply) {
   reply.sendFile('list.html') 
 })
 
