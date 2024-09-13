@@ -70,6 +70,7 @@ const proxyHandler = (upstream, prefix) => {
 };
 
 // Register all proxies
+proxyHandler('https://oxide.3kh0.net/', '/oxide/');
 proxyHandler('https://shuttleproxy.com/', '/shuttle/');
 proxyHandler('https://google.com/', '/google/');
 proxyHandler('https://github.com/', '/github/');
@@ -85,10 +86,6 @@ proxyHandler('https://1v1.lol/', '/1v1/');
 proxyHandler('https://movieboxpro.app/', '/mvp/');
 proxyHandler('https://www.braflix.st/', '/braflix/');
 
-// Serve static files
-server.get('/', function (req, reply) {
-  reply.sendFile('index.html');
-});
 server.get('/list', function (req, reply) {
   reply.sendFile('list.html');
 });
