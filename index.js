@@ -11,7 +11,7 @@ server.register(require('@fastify/static'), {
 
 // Register @fastify/http-proxy plugin
 server.register(FastifyProxy, {
-  upstream: '/list', // Default upstream server
+  upstream: 'https://minoa.cat', // Default upstream server
   prefix: '/proc',
   hooks: {
     onRequest (request, reply) {
