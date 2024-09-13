@@ -21,19 +21,21 @@ const proxyHandler = (upstream, prefix) => {
         response.raw.send = function (body) {
           if (typeof body === 'string' && response.raw.headers['content-type'] && response.raw.headers['content-type'].includes('text/html')) {
             // Modify HTML content
-            body = body.replace(/href="\/([^"]*)"/g, `href="https://vp.minoa.cat/$1"`)
-                       .replace(/src="\/([^"]*)"/g, `src="https://vp.minoa.cat/$1"`)
+            body = body.replace(/href="(https?:\/\/[^"]*)"/g, `href="https://vp.minoa.cat/$1"`)
+                       .replace(/src="(https?:\/\/[^"]*)"/g, `src="https://vp.minoa.cat/$1"`)
+                       .replace(/href="\/([^"]*)"/g, `href="./$1"`)
+                       .replace(/src="\/([^"]*)"/g, `src="./$1"`)
                        .replace(/href="([^"]*)"/g, (match, p1) => {
                          if (p1.startsWith('http') || p1.startsWith('//')) {
-                           return `href="https://vp.minoa.cat${p1}"`;
+                           return `href="https://vp.minoa.cat/${p1}"`;
                          }
-                         return `href="https://vp.minoa.cat/${p1}"`;
+                         return `href="./${p1}"`;
                        })
                        .replace(/src="([^"]*)"/g, (match, p1) => {
                          if (p1.startsWith('http') || p1.startsWith('//')) {
-                           return `src="https://vp.minoa.cat${p1}"`;
+                           return `src="https://vp.minoa.cat/${p1}"`;
                          }
-                         return `src="https://vp.minoa.cat/${p1}"`;
+                         return `src="./${p1}"`;
                        })
                        // Replace all <title> tags with <title>Minoa</title>
                        .replace(/<title>.*?<\/title>/g, '<title>Minoa</title>');
@@ -45,7 +47,9 @@ const proxyHandler = (upstream, prefix) => {
         if (response.raw.headers['location']) {
           let newLocation = response.raw.headers['location'];
           if (newLocation.startsWith('/')) {
-            newLocation = newLocation.substring(1); // Remove leading slash
+            newLocation = `./${newLocation.substring(1)}`; // Replace leading slash with './'
+          } else {
+            newLocation = `./${newLocation}`; // Add './' if it doesn't start with a slash
           }
           newLocation = `https://vp.minoa.cat/${newLocation}`;
           response.raw.headers['location'] = newLocation;
