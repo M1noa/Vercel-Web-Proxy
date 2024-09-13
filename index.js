@@ -9,34 +9,9 @@ server.register(require('@fastify/static'), {
   prefix: '/public/', // optional: default '/'
 });
 
-// Register @fastify/http-proxy plugin
-server.register(FastifyProxy, {
-  upstream: 'https://minoa.cat', // Default upstream server
-  prefix: '/proc',
-  hooks: {
-    onRequest (request, reply) {
-      // Extract the URL part from the path
-      const urlPath = request.raw.url.split('/proc/')[1];
-      
-      if (urlPath) {
-        // Modify the request URL to include the extracted path
-        request.raw.url = `/${urlPath}`;
-      }
-    }
-  }
-});
-
-// Serve static files
-server.get('/', function (req, reply) {
-  reply.sendFile('index.html');
-});
-server.get('/list', function (req, reply) {
-  reply.sendFile('list.html');
-});
-
 // Proxy handler
 const proxyHandler = (upstream, prefix) => {
-  server.register(require('@fastify/http-proxy'), {
+  server.register(FastifyProxy, {
     upstream,
     prefix,
     http2: false,
@@ -46,19 +21,19 @@ const proxyHandler = (upstream, prefix) => {
         response.raw.send = function (body) {
           if (typeof body === 'string' && response.raw.headers['content-type'] && response.raw.headers['content-type'].includes('text/html')) {
             // Modify HTML content
-            body = body.replace(/href="\/([^"]*)"/g, `href="/proc/$1"`)
-                       .replace(/src="\/([^"]*)"/g, `src="/proc/$1"`)
+            body = body.replace(/href="\/([^"]*)"/g, `href="https://vp.minoa.cat$1"`)
+                       .replace(/src="\/([^"]*)"/g, `src="https://vp.minoa.cat$1"`)
                        .replace(/href="([^"]*)"/g, (match, p1) => {
                          if (p1.startsWith('http') || p1.startsWith('//')) {
-                           return `href="/proc/${p1}"`;
+                           return `href="https://vp.minoa.cat${p1}"`;
                          }
-                         return `href="/proc/${p1}"`;
+                         return `href="https://vp.minoa.cat${p1}"`;
                        })
                        .replace(/src="([^"]*)"/g, (match, p1) => {
                          if (p1.startsWith('http') || p1.startsWith('//')) {
-                           return `src="/proc/${p1}"`;
+                           return `src="https://vp.minoa.cat${p1}"`;
                          }
-                         return `src="/proc/${p1}"`;
+                         return `src="https://vp.minoa.cat${p1}"`;
                        });
           }
           return originalSend.call(this, body);
@@ -70,7 +45,7 @@ const proxyHandler = (upstream, prefix) => {
           if (newLocation.startsWith('/')) {
             newLocation = newLocation.substring(1); // Remove leading slash
           }
-          newLocation = `/proc/${newLocation}`;
+          newLocation = `https://vp.minoa.cat/${newLocation}`;
           response.raw.headers['location'] = newLocation;
         }
       }
@@ -93,6 +68,14 @@ proxyHandler('https://adfree3kh0.github.io/', '/3kh/');
 proxyHandler('https://1v1.lol/', '/1v1/');
 proxyHandler('https://movieboxpro.app/', '/mvp/');
 proxyHandler('https://www.braflix.st/', '/braflix/');
+
+// Serve static files
+server.get('/', function (req, reply) {
+  reply.sendFile('index.html');
+});
+server.get('/list', function (req, reply) {
+  reply.sendFile('list.html');
+});
 
 // Start server
 server.listen({host: "0.0.0.0", port: 3000 }, (err, address) => {
