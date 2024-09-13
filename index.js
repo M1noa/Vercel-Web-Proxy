@@ -25,6 +25,8 @@ const proxyHandler = (upstream, prefix) => {
           console.log('Processing response body'); // Debugging line
 
           if (typeof body === 'string' && response.raw.headers['content-type'] && response.raw.headers['content-type'].includes('text/html')) {
+            console.log('Modifying HTML content'); // Debugging line
+
             // Modify HTML content
             body = body.replace(/href="(https?:\/\/[^"]*)"/g, `href="https://vp.minoa.cat/$1"`)
                        .replace(/src="(https?:\/\/[^"]*)"/g, `src="https://vp.minoa.cat/$1"`)
@@ -44,6 +46,9 @@ const proxyHandler = (upstream, prefix) => {
                        })
                        // Replace all <title> tags with <title>Minoa</title>
                        .replace(/<title>.*?<\/title>/g, '<title>Minoa</title>');
+
+            // Debugging output
+            console.log(body);
           }
           return originalSend.call(this, body);
         };
