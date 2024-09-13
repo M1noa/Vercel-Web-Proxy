@@ -11,7 +11,7 @@ server.register(require('@fastify/static'), {
 
 // Register @fastify/http-proxy plugin
 server.register(FastifyProxy, {
-  upstream: 'http://localhost', // Default upstream server
+  upstream: '/list', // Default upstream server
   prefix: '/proc',
   hooks: {
     onRequest (request, reply) {
