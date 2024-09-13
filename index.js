@@ -16,7 +16,7 @@ server.get('/list', function (req, reply) {
 });
 
 // Define a dynamic proxy route
-server.all('/prxy/*', async (req, reply) => {
+server.all('/*', async (req, reply) => {
   // Extract the part of the path after /prxy/
   const pathAfterPrxy = req.url.replace(/^\/prxy\//, '');
 
@@ -51,7 +51,7 @@ server.all('/prxy/*', async (req, reply) => {
     const proxy = require('@fastify/http-proxy');
     await proxy({
       upstream: upstreamUrl,
-      prefix: `/prxy/${pathAfterPrxy}`, // Keep the same prefix
+      prefix: `/${pathAfterPrxy}`, // Keep the same prefix
       http2: false,
     })(req.raw, reply.raw);
   } catch (error) {
