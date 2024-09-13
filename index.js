@@ -1,4 +1,5 @@
 const Fastify = require('fastify');
+const FastifyProxy = require('fastify-http-proxy');
 const server = Fastify();
 const path = require('node:path');
 
