@@ -47,7 +47,7 @@ const proxyHandler = (upstream, prefix) => {
 };
 
 // Register all proxies
-proxyHandler('https://oxide.3kh0.net/', '/');
+proxyHandler('https://nano-proxy.github.io/', '/');
 proxyHandler('https://shuttleproxy.com/', '/shuttle/');
 proxyHandler('https://google.com/', '/google/');
 proxyHandler('https://github.com/', '/github/');
