@@ -1,6 +1,7 @@
 const Fastify = require('fastify');
 const server = Fastify();
 const path = require('node:path');
+const proxy = require('@fastify/http-proxy');
 
 server.register(require('@fastify/static'), {
   root: path.join(__dirname, 'public'),
@@ -15,10 +16,11 @@ server.get('/list', function (req, reply) {
   reply.sendFile('list.html');
 });
 
-// Define a dynamic proxy route
+// Define a dynamic proxy route for all paths
 server.all('/*', async (req, reply) => {
   // Extract the part of the path after /prxy/
-  const pathAfterPrxy = req.url.replace(/^\/prxy\//, '');
+  const fullPath = req.url;
+  const pathAfterPrxy = fullPath.replace(/^\/prxy\//, '');
 
   // Define a map of upstream URLs
   const upstreams = {
@@ -38,8 +40,11 @@ server.all('/*', async (req, reply) => {
     'braflix': 'https://www.braflix.st/',
   };
 
-  // Find the upstream URL based on the path after /prxy/
-  const upstreamUrl = upstreams[pathAfterPrxy];
+  // Extract the proxy key from the path
+  const [proxyKey] = pathAfterPrxy.split('/'); // Only consider the first part for routing
+
+  // Find the upstream URL based on the proxy key
+  const upstreamUrl = upstreams[proxyKey];
   
   if (!upstreamUrl) {
     reply.code(404).send('Upstream not found');
@@ -48,15 +53,20 @@ server.all('/*', async (req, reply) => {
 
   // Proxy the request to the appropriate upstream URL
   try {
-    const proxy = require('@fastify/http-proxy');
-    await proxy({
+    const proxyHandler = proxy({
       upstream: upstreamUrl,
-      prefix: `/${pathAfterPrxy}`, // Keep the same prefix
       http2: false,
-    })(req.raw, reply.raw);
+    });
+
+    proxyHandler(req.raw, reply.raw);
   } catch (error) {
     reply.code(500).send('Proxy error');
   }
 });
 
-server.listen({ host: '0.0.0.0', port: 3000 });
+server.listen({ host: '0.0.0.0', port: 3000 }, err => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+});
