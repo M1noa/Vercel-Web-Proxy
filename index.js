@@ -18,15 +18,16 @@ const proxyHandler = (req, reply) => {
     upstream = 'https://nano-proxy.github.io/';
   } else if (host.includes('aluu')) {
     upstream = 'https://aluu.xyz/';
+  } else if (host.includes('shuttle')) {
+    upstream = 'https://shuttleproxy.com/';
   } else {
-    // Redirect to /list if neither 'nano' nor 'aluu' is found in the domain
     reply.redirect('/list');
     return;
   }
 
   server.register(FastifyProxy, {
     upstream,
-    prefix: '/', // Apply proxy for the root
+    prefix: '/',
     http2: false
   });
 
