@@ -16,11 +16,11 @@ server.get('/list', function (req, reply) {
   reply.sendFile('list.html');
 });
 
-// Define a dynamic proxy route for all paths
+// Catch-all route for dynamic proxy
 server.all('/*', async (req, reply) => {
-  // Extract the part of the path after /prxy/
-  const fullPath = req.url;
-  const pathAfterPrxy = fullPath.replace(/^\/prxy\//, '');
+  const urlPath = req.raw.url;
+
+  const pathAfterPrxy = urlPath.replace(/^\/prxy\//, '');
 
   // Define a map of upstream URLs
   const upstreams = {
@@ -40,27 +40,38 @@ server.all('/*', async (req, reply) => {
     'braflix': 'https://www.braflix.st/',
   };
 
-  // Extract the proxy key from the path
+  // Extract the proxy key
   const [proxyKey] = pathAfterPrxy.split('/'); // Only consider the first part for routing
 
   // Find the upstream URL based on the proxy key
   const upstreamUrl = upstreams[proxyKey];
   
-  if (!upstreamUrl) {
-    reply.code(404).send('Upstream not found');
-    return;
-  }
+  if (upstreamUrl) {
+    // If an upstream URL is found, use it
+    try {
+      const proxyHandler = proxy({
+        upstream: upstreamUrl,
+        http2: false,
+      });
 
-  // Proxy the request to the appropriate upstream URL
-  try {
-    const proxyHandler = proxy({
-      upstream: upstreamUrl,
-      http2: false,
-    });
+      // Pass the original request and reply objects to the proxy handler
+      proxyHandler(req.raw, reply.raw);
+    } catch (error) {
+      reply.code(500).send('Proxy error');
+    }
+  } else {
+    // If no predefined upstream is found, proxy to the path after /prxy/
+    try {
+      const dynamicProxyHandler = proxy({
+        upstream: `https://${pathAfterPrxy}`,
+        http2: false,
+      });
 
-    proxyHandler(req.raw, reply.raw);
-  } catch (error) {
-    reply.code(500).send('Proxy error');
+      // Pass the original request and reply objects to the proxy handler
+      dynamicProxyHandler(req.raw, reply.raw);
+    } catch (error) {
+      reply.code(500).send('Proxy error');
+    }
   }
 });
 
