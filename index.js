@@ -27,9 +27,11 @@ const proxyHandler = (upstream, prefix) => {
         const originalSend = response.raw.send;
         response.raw.send = function (body) {
           if (typeof body === 'string' && response.raw.headers['content-type'] && response.raw.headers['content-type'].includes('text/html')) {
-            // Modify the HTML response here
-            body = body.replace(/href="\/(?!\/)([^"]*)"/g, `href="/${prefix}$1"`)
-                       .replace(/src="\/(?!\/)([^"]*)"/g, `src="/${prefix}$1"`)
+            // Modify HTML content
+            body = body.replace(/href="\/([^"]*)"/g, `href="/${prefix}$1"`)
+                       .replace(/src="\/([^"]*)"/g, `src="/${prefix}$1"`)
+                       .replace(/href="(https:\/\/[^"]*)"/g, `href="/${prefix}$1"`)
+                       .replace(/src="(https:\/\/[^"]*)"/g, `src="/${prefix}$1"`)
                        .replace(new RegExp(`href="${upstream}"`, 'g'), '')
                        .replace(new RegExp(`src="${upstream}"`, 'g'), '');
           }
