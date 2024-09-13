@@ -19,6 +19,11 @@ const proxyHandler = (upstream, prefix) => {
       onResponse: async (response) => {
         const originalSend = response.raw.send;
         response.raw.send = function (body) {
+          // Disable caching
+          response.raw.setHeader('Cache-Control', 'no-store');
+
+          console.log('Processing response body'); // Debugging line
+
           if (typeof body === 'string' && response.raw.headers['content-type'] && response.raw.headers['content-type'].includes('text/html')) {
             // Modify HTML content
             body = body.replace(/href="(https?:\/\/[^"]*)"/g, `href="https://vp.minoa.cat/$1"`)
