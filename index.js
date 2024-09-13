@@ -1,5 +1,5 @@
 const Fastify = require('fastify');
-const FastifyProxy = require('fastify-http-proxy');
+const FastifyProxy = require('@fastify/http-proxy');
 const server = Fastify();
 const path = require('node:path');
 
@@ -9,9 +9,9 @@ server.register(require('@fastify/static'), {
   prefix: '/public/', // optional: default '/'
 });
 
-// Register the fastify-http-proxy plugin
+// Register @fastify/http-proxy plugin
 server.register(FastifyProxy, {
-  upstream: 'http://google.com', // Default upstream server if no path provided
+  upstream: 'http://localhost', // Default upstream server
   prefix: '/proc',
   hooks: {
     onRequest (request, reply) {
@@ -19,7 +19,7 @@ server.register(FastifyProxy, {
       const urlPath = request.raw.url.split('/proc/')[1];
       
       if (urlPath) {
-        // Update the proxy configuration with the target URL
+        // Modify the request URL to include the extracted path
         request.raw.url = `/${urlPath}`;
       }
     }
