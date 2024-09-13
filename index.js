@@ -1,7 +1,6 @@
 const Fastify = require('fastify');
 const server = Fastify();
 const path = require('node:path');
-const { Transform } = require('node:stream');
 
 // Static file serving
 server.register(require('@fastify/static'), {
@@ -29,8 +28,8 @@ const proxyHandler = (upstream, prefix) => {
         response.raw.send = function (body) {
           if (typeof body === 'string' && response.raw.headers['content-type'] && response.raw.headers['content-type'].includes('text/html')) {
             // Modify the HTML response here
-            body = body.replace(/href="\/(.*)"/g, 'href="/' + prefix + '$1"')
-                       .replace(/src="\/(.*)"/g, 'src="/' + prefix + '$1"')
+            body = body.replace(/href="\/(?!\/)([^"]*)"/g, `href="/${prefix}$1"`)
+                       .replace(/src="\/(?!\/)([^"]*)"/g, `src="/${prefix}$1"`)
                        .replace(new RegExp(`href="${upstream}"`, 'g'), '')
                        .replace(new RegExp(`src="${upstream}"`, 'g'), '');
           }
@@ -41,10 +40,9 @@ const proxyHandler = (upstream, prefix) => {
         if (response.raw.headers['location']) {
           let newLocation = response.raw.headers['location'];
           if (newLocation.startsWith('/')) {
-            newLocation = prefix + newLocation;
-          } else if (newLocation.startsWith(upstream)) {
-            newLocation = newLocation.replace(upstream, prefix);
+            newLocation = newLocation.substring(1); // Remove leading slash
           }
+          newLocation = `${prefix}${newLocation}`;
           response.raw.headers['location'] = newLocation;
         }
       }
