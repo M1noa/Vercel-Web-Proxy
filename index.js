@@ -25,18 +25,27 @@ const proxyHandler = (upstream, prefix) => {
     http2: false,
     hooks: {
       onResponse: async (response) => {
-        if (response.raw.headers['content-type'] && response.raw.headers['content-type'].includes('text/html')) {
-          const originalSend = response.raw.send;
-          response.raw.send = function (body) {
-            if (typeof body === 'string') {
-              // Modify the HTML response here
-              body = body.replace(/href="\/(.*)"/g, 'href="/' + prefix + '$1"')
-                         .replace(/src="\/(.*)"/g, 'src="/' + prefix + '$1"')
-                         .replace(new RegExp(`href="${upstream}"`, 'g'), '')
-                         .replace(new RegExp(`src="${upstream}"`, 'g'), '');
-            }
-            return originalSend.call(this, body);
-          };
+        const originalSend = response.raw.send;
+        response.raw.send = function (body) {
+          if (typeof body === 'string' && response.raw.headers['content-type'] && response.raw.headers['content-type'].includes('text/html')) {
+            // Modify the HTML response here
+            body = body.replace(/href="\/(.*)"/g, 'href="/' + prefix + '$1"')
+                       .replace(/src="\/(.*)"/g, 'src="/' + prefix + '$1"')
+                       .replace(new RegExp(`href="${upstream}"`, 'g'), '')
+                       .replace(new RegExp(`src="${upstream}"`, 'g'), '');
+          }
+          return originalSend.call(this, body);
+        };
+
+        // Handle redirects
+        if (response.raw.headers['location']) {
+          let newLocation = response.raw.headers['location'];
+          if (newLocation.startsWith('/')) {
+            newLocation = prefix + newLocation;
+          } else if (newLocation.startsWith(upstream)) {
+            newLocation = newLocation.replace(upstream, prefix);
+          }
+          response.raw.headers['location'] = newLocation;
         }
       }
     }
