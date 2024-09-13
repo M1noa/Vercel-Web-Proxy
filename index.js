@@ -20,36 +20,13 @@ const proxyHandler = (upstream, prefix) => {
         const originalSend = response.raw.send;
         response.raw.send = function (body) {
           // Disable caching
-          response.raw.setHeader('Cache-Control', 'no-store');
+          response.raw.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+          response.raw.setHeader('Pragma', 'no-cache');
+          response.raw.setHeader('Expires', '0');
 
           console.log('Processing response body'); // Debugging line
 
-          if (typeof body === 'string' && response.raw.headers['content-type'] && response.raw.headers['content-type'].includes('text/html')) {
-            console.log('Modifying HTML content'); // Debugging line
-
-            // Modify HTML content
-            body = body.replace(/href="(https?:\/\/[^"]*)"/g, `href="https://vp.minoa.cat/$1"`)
-                       .replace(/src="(https?:\/\/[^"]*)"/g, `src="https://vp.minoa.cat/$1"`)
-                       .replace(/href="\/([^"]*)"/g, `href="./$1"`)
-                       .replace(/src="\/([^"]*)"/g, `src="./$1"`)
-                       .replace(/href="([^"]*)"/g, (match, p1) => {
-                         if (p1.startsWith('http') || p1.startsWith('//')) {
-                           return `href="https://vp.minoa.cat/${p1}"`;
-                         }
-                         return `href="./${p1}"`;
-                       })
-                       .replace(/src="([^"]*)"/g, (match, p1) => {
-                         if (p1.startsWith('http') || p1.startsWith('//')) {
-                           return `src="https://vp.minoa.cat/${p1}"`;
-                         }
-                         return `src="./${p1}"`;
-                       })
-                       // Replace all <title> tags with <title>Minoa</title>
-                       .replace(/<title>.*?<\/title>/g, '<title>Minoa</title>');
-
-            // Debugging output
-            console.log(body);
-          }
+          // Return the original response body without modification
           return originalSend.call(this, body);
         };
 
