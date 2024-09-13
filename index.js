@@ -8,6 +8,23 @@ server.register(require('@fastify/static'), {
   prefix: '/public/', // optional: default '/'
 });
 
+// Register the fastify-http-proxy plugin
+server.register(FastifyProxy, {
+  upstream: 'http://google.com', // Default upstream server if no path provided
+  prefix: '/proc',
+  hooks: {
+    onRequest (request, reply) {
+      // Extract the URL part from the path
+      const urlPath = request.raw.url.split('/proc/')[1];
+      
+      if (urlPath) {
+        // Update the proxy configuration with the target URL
+        request.raw.url = `/${urlPath}`;
+      }
+    }
+  }
+});
+
 // Serve static files
 server.get('/', function (req, reply) {
   reply.sendFile('index.html');
@@ -28,12 +45,20 @@ const proxyHandler = (upstream, prefix) => {
         response.raw.send = function (body) {
           if (typeof body === 'string' && response.raw.headers['content-type'] && response.raw.headers['content-type'].includes('text/html')) {
             // Modify HTML content
-            body = body.replace(/href="\/([^"]*)"/g, `href="/${prefix}$1"`)
-                       .replace(/src="\/([^"]*)"/g, `src="/${prefix}$1"`)
-                       .replace(/href="(https:\/\/[^"]*)"/g, `href="/${prefix}$1"`)
-                       .replace(/src="(https:\/\/[^"]*)"/g, `src="/${prefix}$1"`)
-                       .replace(new RegExp(`href="${upstream}"`, 'g'), '')
-                       .replace(new RegExp(`src="${upstream}"`, 'g'), '');
+            body = body.replace(/href="\/([^"]*)"/g, `href="/proc/$1"`)
+                       .replace(/src="\/([^"]*)"/g, `src="/proc/$1"`)
+                       .replace(/href="([^"]*)"/g, (match, p1) => {
+                         if (p1.startsWith('http') || p1.startsWith('//')) {
+                           return `href="/proc/${p1}"`;
+                         }
+                         return `href="/proc/${p1}"`;
+                       })
+                       .replace(/src="([^"]*)"/g, (match, p1) => {
+                         if (p1.startsWith('http') || p1.startsWith('//')) {
+                           return `src="/proc/${p1}"`;
+                         }
+                         return `src="/proc/${p1}"`;
+                       });
           }
           return originalSend.call(this, body);
         };
@@ -44,7 +69,7 @@ const proxyHandler = (upstream, prefix) => {
           if (newLocation.startsWith('/')) {
             newLocation = newLocation.substring(1); // Remove leading slash
           }
-          newLocation = `${prefix}${newLocation}`;
+          newLocation = `/proc/${newLocation}`;
           response.raw.headers['location'] = newLocation;
         }
       }
