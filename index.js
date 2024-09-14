@@ -18,10 +18,16 @@ const proxyHandler = (upstream, prefix) => {
   });
 };
 
-// Register all proxies
 proxyHandler('https://nano-proxy.github.io/', '/nano/');
-proxyHandler('https://aluu.xyz/', '/');
+proxyHandler('https://aluu.xyz/', '/aluu/');
+proxyHandler('https://holyunblocker.org/', '/holy/');
 proxyHandler('https://shuttleproxy.com/', '/shuttle/');
+proxyHandler('https://nebulaproxy.io/', '/nebula/');
+proxyHandler('https://anura.pro/', '/');
+proxyHandler('https://anura.pro/', '/anura/');
+proxyHandler('https://terbium-46q.pages.dev/', '/terbium/');
+proxyHandler('https://metallic.eu.org/', '/metallic/');
+proxyHandler('https://definitelyscience.com//', '/defsci/');
 
 server.get('/list', function (req, reply) {
   reply.sendFile('list.html');
