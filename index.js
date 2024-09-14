@@ -9,35 +9,40 @@ server.register(require('@fastify/static'), {
   prefix: '/public/', // optional: default '/'
 });
 
+// Register all proxies beforehand
+const proxyRoutes = [
+  { domain: 'nano', upstream: 'https://nano-proxy.github.io/' },
+  { domain: 'aluu', upstream: 'https://aluu.xyz/' },
+  { domain: 'shuttle', upstream: 'https://shuttleproxy.com/' }
+];
+
 // Proxy handler based on domain name
-const proxyHandler = (req, reply) => {
+server.get('/*', (req, reply) => {
   const host = req.hostname || req.headers.host;
-  let upstream = '';
 
-  if (host.includes('nano')) {
-    upstream = 'https://nano-proxy.github.io/';
-  } else if (host.includes('aluu')) {
-    upstream = 'https://aluu.xyz/';
-  } else if (host.includes('shuttle')) {
-    upstream = 'https://shuttleproxy.com/';
+  // Find matching upstream based on the host
+  const proxy = proxyRoutes.find(route => host.includes(route.domain));
+
+  if (proxy) {
+    // If a matching proxy is found, forward the request
+    reply.callNotFound(); // Let the proxy handle it
   } else {
+    // Redirect to /list if no match is found
     reply.redirect('/list');
-    return;
   }
+});
 
+// Register proxies globally for each domain prefix
+proxyRoutes.forEach(route => {
   server.register(FastifyProxy, {
-    upstream,
+    upstream: route.upstream,
     prefix: '/',
     http2: false
   });
+});
 
-  reply.send(`Proxying to ${upstream}`);
-};
-
-// Dynamic proxy route
-server.get('/*', proxyHandler);
-
-server.get('/list', function (req, reply) {
+// Serve list.html
+server.get('/list', (req, reply) => {
   reply.sendFile('list.html');
 });
 
