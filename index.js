@@ -1,7 +1,7 @@
 const Fastify = require('fastify');
 const FastifyProxy = require('@fastify/http-proxy');
-const server = Fastify();
 const path = require('node:path');
+const server = Fastify();
 
 // Static file serving
 server.register(require('@fastify/static'), {
@@ -28,12 +28,10 @@ server.get('/list', function (req, reply) {
 });
 
 // Start server
-server.listen({host: "0.0.0.0", port: 3000 }, (err, address) => {
+server.listen({ host: "0.0.0.0", port: 3000 }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);
   }
-  console.log(Server listening at ${address});
+  console.log(`Server listening at ${address}`);
 });
-
-
