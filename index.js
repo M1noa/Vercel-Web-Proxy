@@ -21,7 +21,13 @@ Object.keys(proxyRoutes).forEach(key => {
   server.register(FastifyProxy, {
     upstream: proxyRoutes[key],
     prefix: `/${key}`, // Use the domain keyword as the prefix
-    http2: false
+    http2: false,
+    hooks: {
+      onRequest: (request, reply) => {
+        // Modify the URL path to strip the prefix
+        request.url = request.url.replace(`/${key}`, '');
+      }
+    }
   });
 });
 
@@ -30,7 +36,7 @@ server.get('/*', (req, reply) => {
   const host = req.hostname || req.headers.host;
 
   if (host.includes('nano')) {
-    reply.redirect('/nano');
+    reply.redirect('/nano'); // Redirect to the prefix route which proxies to the upstream root
   } else if (host.includes('aluu')) {
     reply.redirect('/aluu');
   } else if (host.includes('shuttle')) {
