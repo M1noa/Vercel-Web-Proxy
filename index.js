@@ -9,44 +9,47 @@ server.register(require('@fastify/static'), {
   prefix: '/public/', // optional: default '/'
 });
 
-// Register all proxies beforehand
-const proxyRoutes = [
-  { domain: 'nano', upstream: 'https://nano-proxy.github.io/' },
-  { domain: 'aluu', upstream: 'https://aluu.xyz/' },
-  { domain: 'shuttle', upstream: 'https://shuttleproxy.com/' }
-];
+// Predefined upstream URLs based on the domain
+const proxyRoutes = {
+  nano: 'https://nano-proxy.github.io/',
+  aluu: 'https://aluu.xyz/',
+  shuttle: 'https://shuttleproxy.com/',
+};
 
-// Proxy handler based on domain name
+// Single route handler
 server.get('/*', (req, reply) => {
   const host = req.hostname || req.headers.host;
 
-  // Find matching upstream based on the host
-  const proxy = proxyRoutes.find(route => host.includes(route.domain));
+  // Determine which proxy to use based on the domain
+  let upstream = null;
+  if (host.includes('nano')) {
+    upstream = proxyRoutes.nano;
+  } else if (host.includes('aluu')) {
+    upstream = proxyRoutes.aluu;
+  } else if (host.includes('shuttle')) {
+    upstream = proxyRoutes.shuttle;
+  }
 
-  if (proxy) {
-    // If a matching proxy is found, forward the request
-    reply.callNotFound(); // Let the proxy handle it
-  } else {
-    // Redirect to /list if no match is found
+  // If no proxy match, redirect to /list
+  if (!upstream) {
     reply.redirect('/list');
+  } else {
+    // Proxy the request to the appropriate upstream
+    server.register(FastifyProxy, {
+      upstream,
+      prefix: '/', // Route all requests to the upstream
+      http2: false
+    });
+    reply.callNotFound(); // Let Fastify handle the proxy route as a "not found" request
   }
 });
 
-// Register proxies globally for each domain prefix
-proxyRoutes.forEach(route => {
-  server.register(FastifyProxy, {
-    upstream: route.upstream,
-    prefix: '/',
-    http2: false
-  });
-});
-
-// Serve list.html
+// Serve list.html at /list
 server.get('/list', (req, reply) => {
   reply.sendFile('list.html');
 });
 
-// Start server
+// Start the server
 server.listen({ host: "0.0.0.0", port: 3000 }, (err, address) => {
   if (err) {
     console.error(err);
