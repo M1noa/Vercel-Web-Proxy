@@ -11,14 +11,14 @@ server.register(require('@fastify/static'), {
 
 // Proxy configuration
 const proxies = {
-  'nano.minoa.cat': 'https://nano-proxy.github.io/',
+  'list.minoa.cat': 'https://nano-proxy.github.io/',
   'aluu.minoa.cat': 'https://aluu.xyz/',
-  'default.minoa.cat': 'https://shuttleproxy.com/' // Default proxy
+  'shuttle.minoa.cat': 'https://shuttleproxy.com/' // Default proxy
 };
 
 // Proxy handler function
 const setupProxy = (host) => {
-  const upstream = proxies[host] || proxies['default.minoa.cat'];
+  const upstream = proxies[host] || proxies['list.minoa.cat'];
   server.register(FastifyProxy, {
     upstream,
     prefix: '/',
