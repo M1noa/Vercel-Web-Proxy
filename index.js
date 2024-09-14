@@ -9,40 +9,31 @@ server.register(require('@fastify/static'), {
   prefix: '/public/', // optional: default '/'
 });
 
-// Proxy configuration
-const proxies = {
-  'list.minoa.cat': 'https://nano-proxy.github.io/',
-  'aluu.minoa.cat': 'https://aluu.xyz/',
-  'shuttle.minoa.cat': 'https://shuttleproxy.com/' // Default proxy
-};
-
-// Proxy handler function
-const setupProxy = (host) => {
-  const upstream = proxies[host] || proxies['list.minoa.cat'];
+// Proxy handler
+const proxyHandler = (upstream, prefix) => {
   server.register(FastifyProxy, {
     upstream,
-    prefix: '/',
+    prefix,
     http2: false
   });
 };
 
-// Register proxy for each host
-server.addHook('onRequest', (request, reply, done) => {
-  const host = request.headers.host;
-  setupProxy(host);
-  done();
-});
+// Register all proxies
+proxyHandler('https://nano-proxy.github.io/', '/nano/');
+proxyHandler('https://aluu.xyz/', '/');
+proxyHandler('https://shuttleproxy.com/', '/shuttle/');
 
-// Serve list.html
 server.get('/list', function (req, reply) {
   reply.sendFile('list.html');
 });
 
 // Start server
-server.listen({ host: "0.0.0.0", port: 3000 }, (err, address) => {
+server.listen({host: "0.0.0.0", port: 3000 }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);
   }
-  console.log(`Server listening at ${address}`);
+  console.log(Server listening at ${address});
 });
+
+
