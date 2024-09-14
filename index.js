@@ -9,50 +9,36 @@ server.register(require('@fastify/static'), {
   prefix: '/public/', // optional: default '/'
 });
 
-// Predefined upstream URLs based on the domain
-const proxyRoutes = {
-  nano: 'https://nano-proxy.github.io/',
-  aluu: 'https://aluu.xyz/',
-  shuttle: 'https://shuttleproxy.com/',
+// Proxy configuration
+const proxies = {
+  'nano.minoa.cat': 'https://nano-proxy.github.io/',
+  'aluu.minoa.cat': 'https://aluu.xyz/',
+  'default.minoa.cat': 'https://shuttleproxy.com/' // Default proxy
 };
 
-// Register all proxies during server initialization (once)
-Object.keys(proxyRoutes).forEach(key => {
+// Proxy handler function
+const setupProxy = (host) => {
+  const upstream = proxies[host] || proxies['default.minoa.cat'];
   server.register(FastifyProxy, {
-    upstream: proxyRoutes[key],
-    prefix: `/${key}`, // Use the domain keyword as the prefix
-    http2: false,
-    hooks: {
-      onRequest: (request, reply) => {
-        // Modify the URL path to strip the prefix
-        request.url = request.url.replace(`/${key}`, '');
-      }
-    }
+    upstream,
+    prefix: '/',
+    http2: false
   });
+};
+
+// Register proxy for each host
+server.addHook('onRequest', (request, reply, done) => {
+  const host = request.headers.host;
+  setupProxy(host);
+  done();
 });
 
-// Handler to redirect to the correct proxy or list page
-server.get('/*', (req, reply) => {
-  const host = req.hostname || req.headers.host;
-
-  if (host.includes('nano')) {
-    reply.redirect('/nano'); // Redirect to the prefix route which proxies to the upstream root
-  } else if (host.includes('aluu')) {
-    reply.redirect('/aluu');
-  } else if (host.includes('shuttle')) {
-    reply.redirect('/shuttle');
-  } else {
-    // Redirect to /list if no matching proxy is found
-    reply.redirect('/list');
-  }
-});
-
-// Serve list.html at /list
-server.get('/list', (req, reply) => {
+// Serve list.html
+server.get('/list', function (req, reply) {
   reply.sendFile('list.html');
 });
 
-// Start the server
+// Start server
 server.listen({ host: "0.0.0.0", port: 3000 }, (err, address) => {
   if (err) {
     console.error(err);
