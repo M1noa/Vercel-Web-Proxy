@@ -16,31 +16,28 @@ const proxyRoutes = {
   shuttle: 'https://shuttleproxy.com/',
 };
 
-// Single route handler
+// Register all proxies during server initialization (once)
+Object.keys(proxyRoutes).forEach(key => {
+  server.register(FastifyProxy, {
+    upstream: proxyRoutes[key],
+    prefix: `/${key}`, // Use the domain keyword as the prefix
+    http2: false
+  });
+});
+
+// Handler to redirect to the correct proxy or list page
 server.get('/*', (req, reply) => {
   const host = req.hostname || req.headers.host;
 
-  // Determine which proxy to use based on the domain
-  let upstream = null;
   if (host.includes('nano')) {
-    upstream = proxyRoutes.nano;
+    reply.redirect('/nano');
   } else if (host.includes('aluu')) {
-    upstream = proxyRoutes.aluu;
+    reply.redirect('/aluu');
   } else if (host.includes('shuttle')) {
-    upstream = proxyRoutes.shuttle;
-  }
-
-  // If no proxy match, redirect to /list
-  if (!upstream) {
-    reply.redirect('/list');
+    reply.redirect('/shuttle');
   } else {
-    // Proxy the request to the appropriate upstream
-    server.register(FastifyProxy, {
-      upstream,
-      prefix: '/', // Route all requests to the upstream
-      http2: false
-    });
-    reply.callNotFound(); // Let Fastify handle the proxy route as a "not found" request
+    // Redirect to /list if no matching proxy is found
+    reply.redirect('/list');
   }
 });
 
