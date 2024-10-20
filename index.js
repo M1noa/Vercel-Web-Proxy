@@ -48,7 +48,7 @@ const proxyHandler = (upstream, prefix) => {
 
 proxyHandler('https://nano-proxy.github.io/', '/nano/');
 proxyHandler('https://aluu.xyz/', '/aluu/');
-proxyHandler('https://holyunblocker.org/', '');
+proxyHandler('https://proxy.appleflyer.xyz/', '');
 proxyHandler('https://shuttleproxy.com/', '/shuttle/');
 proxyHandler('https://nebulaproxy.io/', '/nebula/');;
 proxyHandler('https://anura.pro/', '/anura/');
