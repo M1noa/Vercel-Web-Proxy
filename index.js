@@ -47,11 +47,10 @@ const proxyHandler = (upstream, prefix) => {
 };
 
 proxyHandler('https://nano-proxy.github.io/', '/nano/');
-proxyHandler('https://aluu.xyz/', '/aluu/');
+proxyHandler('https://aluu.xyz/', '/');
 proxyHandler('https://holyunblocker.org/', '/holy/');
 proxyHandler('https://shuttleproxy.com/', '/shuttle/');
-proxyHandler('https://nebulaproxy.io/', '/nebula/');
-proxyHandler('https://nano-proxy.github.io/', '/');
+proxyHandler('https://nebulaproxy.io/', '/nebula/');;
 proxyHandler('https://anura.pro/', '/anura/');
 proxyHandler('https://terbium-46q.pages.dev/', '/terbium/');
 proxyHandler('https://metallic.eu.org/', '/metallic/');
